@@ -88,6 +88,73 @@ section { position: relative; overflow: hidden; }
 }
 .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
 
+/* ── GLOBAL HUMAN / MACHINE TOGGLE ── */
+.hm-toggle {
+  display: inline-flex; align-items: center; gap: 3px;
+  background: #0d0d14;
+  border: 1px solid rgba(124,92,191,0.4);
+  border-radius: 999px;
+  padding: 4px 6px;
+}
+.hm-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 5px 13px; border-radius: 999px;
+  border: none; cursor: pointer;
+  font-family: var(--display); font-size: 11px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  transition: all 0.18s; background: transparent;
+  color: rgba(255,255,255,0.38);
+}
+.hm-btn.active {
+  background: #1e1b30; color: #fff;
+  border: 1px solid rgba(124,92,191,0.3);
+}
+.hm-dot { width: 6px; height: 6px; border-radius: 50%; }
+.hm-dot-h { background: #22c55e; }
+.hm-dot-m { background: rgba(124,92,191,0.5); }
+.hm-btn.active .hm-dot-m { background: var(--accent); }
+
+/* ── MACHINE OVERLAY ── */
+#machineOverlay {
+  display: none;
+  position: fixed; inset: 0; z-index: 200;
+  background: #060608;
+  overflow-y: auto;
+  padding: 80px 0 60px;
+}
+#machineOverlay.visible { display: block; }
+.mo-inner {
+  max-width: 780px; margin: 0 auto; padding: 0 40px;
+  font-family: 'DM Mono', 'Fira Mono', 'Courier New', monospace;
+  font-size: 13px; line-height: 1.85;
+}
+.mo-brand {
+  font-size: 15px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: #fff; margin-bottom: 28px;
+  display: block;
+}
+.mo-section { margin-bottom: 4px; }
+.mo-section-title {
+  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: rgba(255,255,255,0.28); margin: 20px 0 4px;
+  display: block;
+}
+.mo-line { display: flex; align-items: baseline; gap: 0; margin: 0; }
+.mo-label { color: rgba(255,255,255,0.4); min-width: 0; }
+.mo-link {
+  color: #a78bfa; text-decoration: none; transition: color 0.15s;
+}
+.mo-link:hover { color: #c4b5fd; }
+.mo-text { color: rgba(255,255,255,0.55); }
+.mo-divider {
+  border: none; border-top: 1px solid rgba(255,255,255,0.06);
+  margin: 24px 0;
+}
+.mo-meta {
+  font-size: 11px; color: rgba(255,255,255,0.22);
+  margin-top: 40px; display: block;
+}
+
 /* ── NAV ── */
 nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
@@ -925,21 +992,33 @@ svg.icon { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-w
 </style>
 </head>
 <body>
-
+<!-- HUMAN / MACHINE GLOBAL TOGGLE -->
+ <div style="position:fixed; left:50%; transform:translateX(-50%); z-index:9999; top:50px;">
+      <div class="hm-toggle">
+        <button class="hm-btn active" id="hmBtnHuman" onclick="hmSwitch('human')">
+          <span class="hm-dot hm-dot-h"></span> Human
+        </button>
+        <button class="hm-btn" id="hmBtnMachine" onclick="hmSwitch('machine')">
+          <span class="hm-dot hm-dot-m"></span> Machine
+        </button>
+      </div>
+    </div>
 <!-- ── NAVIGATION ── -->
-<nav>
+<nav id="mainNav">
   <div class="nav-inner">
     <a class="nav-logo" href="#" style="padding:0;">
-      <img src="logo.png" width="150px" alt="logo">
+      <img src="logo_1.png" width="150px" alt="logo">
     </a>
-    <div class="nav-links">
+    <div class="nav-links" id="navLinks">
       <a href="#">Platform</a>
       <a href="#">Demo</a>
       <a href="#">Case Studies</a>
       <a href="#">Resources</a>
       <a href="#">Company</a>
     </div>
-    <a href="#" class="btn-primary" style="font-size:12px; padding:11px 22px;color:var(--white);border-radius: 5px;">Book a Demo</a>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <a href="#" class="btn-primary" id="navCta" style="font-size:12px; padding:11px 22px;color:var(--white);border-radius: 5px;">Book a Demo</a>
+    </div>
     <button class="nav-hamburger" id="hamburger" aria-label="Toggle menu">
       <span></span><span></span><span></span>
     </button>
@@ -954,6 +1033,70 @@ svg.icon { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-w
   <a href="#">Resources</a>
   <a href="#">Company</a>
   <a href="#" class="mobile-cta">Book a Demo →</a>
+</div>
+
+<!-- ── MACHINE VIEW OVERLAY ── -->
+<div id="machineOverlay">
+  <div class="mo-inner">
+    <span class="mo-brand">NOVEMIQ</span>
+
+    <span class="mo-section-title">Platform:</span>
+    <div class="mo-line"><span class="mo-label">&nbsp;&nbsp;</span><a href="#" class="mo-link">[Platform Overview]</a><span class="mo-text">(https://novemiq.com/platform)</span></div>
+    <div class="mo-line"><span class="mo-label">&nbsp;&nbsp;</span><a href="#" class="mo-link">[AI Quality Intelligence]</a><span class="mo-text">(https://novemiq.com/platform/ai-qi)</span></div>
+    <div class="mo-line"><span class="mo-label">&nbsp;&nbsp;</span><a href="#" class="mo-link">[Compliance Automation]</a><span class="mo-text">(https://novemiq.com/platform/compliance)</span></div>
+    <div class="mo-line"><span class="mo-label">&nbsp;&nbsp;</span><a href="#" class="mo-link">[Workflow Intelligence]</a><span class="mo-text">(https://novemiq.com/platform/workflows)</span></div>
+    <div class="mo-line"><span class="mo-label">&nbsp;&nbsp;</span><a href="#" class="mo-link">[Integrations]</a><span class="mo-text">(https://novemiq.com/integrations)</span></div>
+
+    <span class="mo-section-title">Solutions:</span>
+    <div class="mo-line"><span class="mo-label">&nbsp;&nbsp;</span><a href="#" class="mo-link">[SAP Quality Assurance]</a><span class="mo-text">(https://novemiq.com/solutions/sap)</span></div>
+    <div class="mo-line"><span class="mo-label">&nbsp;&nbsp;</span><a href="#" class="mo-link">[BFSI Compliance Review]</a><span class="mo-text">(https://novemiq.com/solutions/bfsi)</span></div>
+    <div class="mo-line"><span class="mo-label">&nbsp;&nbsp;</span><a href="#" class="mo-link">[Workday Regression Testing]</a><span class="mo-text">(https://novemiq.com/solutions/workday)</span></div>
+    <div class="mo-line"><span class="mo-label">&nbsp;&nbsp;</span><a href="#" class="mo-link">[Mobile QA]</a><span class="mo-text">(https://novemiq.com/solutions/mobile)</span></div>
+    <div class="mo-line"><span class="mo-label">&nbsp;&nbsp;</span><a href="#" class="mo-link">[Airlines Operations QA]</a><span class="mo-text">(https://novemiq.com/solutions/airlines)</span></div>
+
+    <span class="mo-section-title">Resources:</span>
+    <div class="mo-line"><span class="mo-label">&nbsp;&nbsp;</span><a href="#" class="mo-link">[Documentation]</a><span class="mo-text">(https://docs.novemiq.com)</span></div>
+    <div class="mo-line"><span class="mo-label">&nbsp;&nbsp;</span><a href="#" class="mo-link">[API Reference]</a><span class="mo-text">(https://docs.novemiq.com/api)</span></div>
+    <div class="mo-line"><span class="mo-label">&nbsp;&nbsp;</span><a href="#" class="mo-link">[Case Studies]</a><span class="mo-text">(https://novemiq.com/case-studies)</span></div>
+    <div class="mo-line"><span class="mo-label">&nbsp;&nbsp;</span><a href="#" class="mo-link">[Whitepapers]</a><span class="mo-text">(https://novemiq.com/resources/whitepapers)</span></div>
+    <div class="mo-line"><span class="mo-label">&nbsp;&nbsp;</span><a href="#" class="mo-link">[Blog]</a><span class="mo-text">(https://novemiq.com/blog)</span></div>
+
+    <span class="mo-section-title">Company:</span>
+    <div class="mo-line"><span class="mo-label">&nbsp;&nbsp;</span><a href="#" class="mo-link">[About Us]</a><span class="mo-text">(https://novemiq.com/about)</span></div>
+    <div class="mo-line"><span class="mo-label">&nbsp;&nbsp;</span><a href="#" class="mo-link">[Careers]</a><span class="mo-text">(https://novemiq.com/careers)</span></div>
+    <div class="mo-line"><span class="mo-label">&nbsp;&nbsp;</span><a href="#" class="mo-link">[Partners]</a><span class="mo-text">(https://novemiq.com/partners)</span></div>
+    <div class="mo-line"><span class="mo-label">&nbsp;&nbsp;</span><a href="#" class="mo-link">[Contact Us]</a><span class="mo-text">(https://novemiq.com/contact)</span></div>
+    <div class="mo-line"><span class="mo-label">&nbsp;&nbsp;</span><a href="#" class="mo-link">[Press]</a><span class="mo-text">(https://novemiq.com/press)</span></div>
+
+    <hr class="mo-divider">
+
+    <span class="mo-section-title">Page summary:</span>
+    <div class="mo-line"><span class="mo-label">&nbsp;&nbsp;</span><span class="mo-text">title: </span><span style="color:rgba(255,255,255,0.7);">"NovemIQ — AI-Powered Quality Intelligence"</span></div>
+    <div class="mo-line"><span class="mo-label">&nbsp;&nbsp;</span><span class="mo-text">headline: </span><span style="color:rgba(255,255,255,0.7);">"Simplify. Amplify. Certify."</span></div>
+    <div class="mo-line"><span class="mo-label">&nbsp;&nbsp;</span><span class="mo-text">description: </span><span style="color:rgba(255,255,255,0.7);">"AI-powered Quality Intelligence platform that simplifies workflows, amplifies productivity and certifies quality with confidence."</span></div>
+    <div class="mo-line"><span class="mo-label">&nbsp;&nbsp;</span><span class="mo-text">cta_primary: </span><span style="color:rgba(255,255,255,0.7);">"Book a Demo" → /demo</span></div>
+    <div class="mo-line"><span class="mo-label">&nbsp;&nbsp;</span><span class="mo-text">cta_secondary: </span><span style="color:rgba(255,255,255,0.7);">"Explore Platform" → /platform</span></div>
+
+    <span class="mo-section-title">Metrics:</span>
+    <div class="mo-line"><span class="mo-label">&nbsp;&nbsp;</span><span class="mo-text">compliance_score: </span><span style="color:#86efac;">98%</span></div>
+    <div class="mo-line"><span class="mo-label">&nbsp;&nbsp;</span><span class="mo-text">critical_issues: </span><span style="color:#86efac;">0</span></div>
+    <div class="mo-line"><span class="mo-label">&nbsp;&nbsp;</span><span class="mo-text">delivery_speed: </span><span style="color:#86efac;">60% faster</span></div>
+    <div class="mo-line"><span class="mo-label">&nbsp;&nbsp;</span><span class="mo-text">team_efficiency: </span><span style="color:#86efac;">3× gain</span></div>
+
+    <span class="mo-section-title">Activity log:</span>
+    <div class="mo-line"><span class="mo-label">&nbsp;&nbsp;</span><span class="mo-text">- module: </span><span style="color:#a78bfa;">"SAP Module QA"</span><span class="mo-text"> score: </span><span style="color:#86efac;">99.2</span></div>
+    <div class="mo-line"><span class="mo-label">&nbsp;&nbsp;</span><span class="mo-text">- module: </span><span style="color:#a78bfa;">"BFSI Compliance Review"</span><span class="mo-text"> score: </span><span style="color:#86efac;">97.8</span></div>
+    <div class="mo-line"><span class="mo-label">&nbsp;&nbsp;</span><span class="mo-text">- module: </span><span style="color:#a78bfa;">"Workday Regression"</span><span class="mo-text"> score: </span><span style="color:#86efac;">98.5</span></div>
+
+    <hr class="mo-divider">
+
+    <div class="mo-line"><span class="mo-text">[Book a Demo]</span><span style="color:rgba(255,255,255,0.3);">(https://novemiq.com/demo)</span></div>
+    <div class="mo-line"><span class="mo-text">[Pricing]</span><span style="color:rgba(255,255,255,0.3);">(https://novemiq.com/pricing)</span></div>
+    <div class="mo-line"><span class="mo-text">[Privacy Policy]</span><span style="color:rgba(255,255,255,0.3);">(https://novemiq.com/privacy)</span></div>
+    <div class="mo-line"><span class="mo-text">[Terms of Service]</span><span style="color:rgba(255,255,255,0.3);">(https://novemiq.com/terms)</span></div>
+
+    <span class="mo-meta">© 2026 NovemIQ · All rights reserved · Switch to <button onclick="hmSwitch('human')" style="background:none;border:none;color:#a78bfa;cursor:pointer;font-family:inherit;font-size:inherit;padding:0;text-decoration:underline;">Human view</button></span>
+  </div>
 </div>
 
 <!-- ── 01 HERO ── -->
@@ -1576,7 +1719,7 @@ svg.icon { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-w
     <div class="footer-top">
       <div class="footer-logo-area">
         <div class="footer-logo" style="padding:0;gap:0;">
-        <img src="logo_1.png" width="150px" alt="logo">  
+        <img src="logo.png" width="120px" alt="logo">  
         </div>
         <p class="footer-tagline">AI-powered Quality Intelligence for modern enterprises.</p>
         <div class="footer-socials">
@@ -1634,6 +1777,30 @@ svg.icon { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-w
 </footer>
 
 <script>
+  // ── GLOBAL HUMAN / MACHINE SWITCH ──
+  const allSections = document.querySelectorAll('section, footer, .mobile-menu');
+  const overlay = document.getElementById('machineOverlay');
+
+  function hmSwitch(mode) {
+    const btnH = document.getElementById('hmBtnHuman');
+    const btnM = document.getElementById('hmBtnMachine');
+    if (mode === 'machine') {
+      overlay.classList.add('visible');
+      document.body.style.overflow = 'hidden'; // let overlay scroll
+      overlay.style.overflowY = 'auto';
+      btnM.classList.add('active');
+      btnH.classList.remove('active');
+      // scroll overlay to top
+      overlay.scrollTop = 0;
+    } else {
+      overlay.classList.remove('visible');
+      document.body.style.overflow = '';
+      btnH.classList.add('active');
+      btnM.classList.remove('active');
+    }
+  }
+
+  // ── HAMBURGER ──
   const hamburger = document.getElementById('hamburger');
   const mobileMenu = document.getElementById('mobileMenu');
 
@@ -1642,7 +1809,6 @@ svg.icon { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-w
     mobileMenu.classList.toggle('open');
   });
 
-  // Close menu when a link is clicked
   mobileMenu.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', () => {
       hamburger.classList.remove('open');
@@ -1650,7 +1816,6 @@ svg.icon { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-w
     });
   });
 
-  // Close menu when clicking outside
   document.addEventListener('click', (e) => {
     if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target)) {
       hamburger.classList.remove('open');
