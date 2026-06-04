@@ -988,6 +988,14 @@ svg.icon { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-w
 
   /* Buttons */
   .btn-primary, .btn-ghost { padding: 13px 22px; font-size: 12px; }
+   .mob_vw{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .nav-logo{border: none}
+  .hmSwap{top: 120px;}
 }
   /* ── NAV EMAIL INPUT ── */
 .nav-email-wrap {
@@ -1060,11 +1068,12 @@ svg.icon { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-w
   0%   { width: 0; }
   100% { width: 100%; }
 }
+ 
 </style>
 </head>
 <body>
 <!-- HUMAN / MACHINE GLOBAL TOGGLE -->
- <div style="position:fixed; left:50%; transform:translateX(-50%); z-index:9999; top:50px;">
+ <div class="hmSwap" style="position:fixed; left:50%; transform:translateX(-50%); z-index:9999; top:50px;">
       <div class="hm-toggle">
         <button class="hm-btn active" id="hmBtnHuman" onclick="hmSwitch('human')">
           <span class="hm-dot hm-dot-h"></span> Human
@@ -1080,7 +1089,7 @@ svg.icon { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-w
     <a class="nav-logo" href="#" style="padding:0;">
       <img src="logo.png" width="150px" alt="logo">
     </a>
-    <div>
+    <div class="mob_vw">
     <div class="nav-links" id="navLinks">
       <a href="#">Platform</a>
       <a href="#">Demo</a>
