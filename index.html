@@ -989,6 +989,74 @@ svg.icon { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-w
   /* Buttons */
   .btn-primary, .btn-ghost { padding: 13px 22px; font-size: 12px; }
 }
+  /* ── NAV EMAIL INPUT ── */
+.nav-email-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 999px;
+  padding: 5px 5px 5px 18px;
+  width: 240px;
+  transition: border-color 0.2s, box-shadow 0.2s, width 0.4s ease;
+  overflow: hidden;
+}
+.nav-email-wrap:focus-within {
+  border-color: rgba(124,92,191,0.7);
+  box-shadow: 0 0 0 3px rgba(124,92,191,0.12);
+  width: 280px;
+}
+.nav-email-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-family: var(--body);
+  font-size: 13px;
+  font-weight: 400;
+  min-width: 0;
+}
+.nav-email-input::placeholder {
+  color: rgba(255,255,255,0.35);
+  transition: color 0.2s;
+}
+.nav-email-input:focus::placeholder {
+  color: rgba(255,255,255,0.18);
+}
+.nav-email-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--accent);
+  border: none; cursor: pointer; color: #fff;
+  flex-shrink: 0;
+  transition: background 0.2s, transform 0.15s;
+}
+.nav-email-btn:hover { background: var(--accent2); transform: scale(1.08); }
+.nav-email-btn:active { transform: scale(0.95); }
+
+/* confirm flash */
+.nav-email-confirm {
+  position: absolute;
+  inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(13,13,20,0.97);
+  border-radius: 999px;
+  font-family: var(--display);
+  font-size: 12px; font-weight: 600;
+  color: #86efac;
+  letter-spacing: 0.04em;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s;
+}
+.nav-email-confirm.show { opacity: 1; pointer-events: all; }
+
+/* typing animation on placeholder */
+@keyframes typePlaceholder {
+  0%   { width: 0; }
+  100% { width: 100%; }
+}
 </style>
 </head>
 <body>
@@ -1016,9 +1084,24 @@ svg.icon { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-w
       <a href="#">Resources</a>
       <a href="#">Company</a>
     </div>
-    <div style="display:flex;align-items:center;gap:14px;">
+    <!-- <div style="display:flex;align-items:center;gap:14px;">
       <a href="#" class="btn-primary" id="navCta" style="font-size:12px; padding:11px 22px;color:var(--white);border-radius: 5px;">Book a Demo</a>
+    </div> -->
+    <!-- Animated Email Input (replaces Book a Demo button) -->
+    <div class="nav-email-wrap" id="navEmailWrap">
+      <input
+        class="nav-email-input"
+        id="navEmailInput"
+        type="email"
+        placeholder=""
+        autocomplete="off"
+      />
+      <button class="nav-email-btn" id="navEmailBtn" onclick="navEmailSend()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+      <span class="nav-email-confirm" id="navEmailConfirm">✓ We'll be in touch</span>
     </div>
+        
     <button class="nav-hamburger" id="hamburger" aria-label="Toggle menu">
       <span></span><span></span><span></span>
     </button>
@@ -1822,6 +1905,51 @@ svg.icon { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-w
       mobileMenu.classList.remove('open');
     }
   });
+
+  // ── NAV EMAIL TYPING PLACEHOLDER ANIMATION ──
+const emailInput = document.getElementById('navEmailInput');
+const placeholders = ['your@email.com', 'Enter work email...', 'Get early access →'];
+let phIdx = 0;
+let phTimeout;
+
+function typePlaceholder(text, i = 0) {
+  if (i <= text.length) {
+    emailInput.placeholder = text.slice(0, i) + (i < text.length ? '|' : '');
+    phTimeout = setTimeout(() => typePlaceholder(text, i + 1), 60);
+  } else {
+    setTimeout(() => erasePlaceholder(text, text.length), 1800);
+  }
+}
+function erasePlaceholder(text, i) {
+  if (i >= 0) {
+    emailInput.placeholder = text.slice(0, i);
+    phTimeout = setTimeout(() => erasePlaceholder(text, i - 1), 35);
+  } else {
+    phIdx = (phIdx + 1) % placeholders.length;
+    setTimeout(() => typePlaceholder(placeholders[phIdx]), 400);
+  }
+}
+// start only when input not focused
+emailInput.addEventListener('focus', () => clearTimeout(phTimeout));
+emailInput.addEventListener('blur', () => {
+  if (!emailInput.value) typePlaceholder(placeholders[phIdx]);
+});
+typePlaceholder(placeholders[phIdx]);
+
+// ── SEND ──
+function navEmailSend() {
+  const val = emailInput.value.trim();
+  if (!val || !val.includes('@')) {
+    emailInput.style.borderBottom = '1px solid #f87171';
+    emailInput.placeholder = 'Need a valid email!';
+    setTimeout(() => { emailInput.style.borderBottom = ''; typePlaceholder(placeholders[phIdx]); }, 1500);
+    return;
+  }
+  const confirm = document.getElementById('navEmailConfirm');
+  confirm.classList.add('show');
+  emailInput.value = '';
+  setTimeout(() => confirm.classList.remove('show'), 2800);
+}
 </script>
 </body>
 </html>
