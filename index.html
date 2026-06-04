@@ -1051,7 +1051,10 @@ svg.icon { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-w
   transition: opacity 0.3s;
 }
 .nav-email-confirm.show { opacity: 1; pointer-events: all; }
-
+#navEmailInput::placeholder {
+  color: rgba(0, 0, 0, 0.5) !important;
+  opacity: 1 !important;
+}
 /* typing animation on placeholder */
 @keyframes typePlaceholder {
   0%   { width: 0; }
