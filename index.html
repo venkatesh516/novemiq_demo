@@ -1914,7 +1914,8 @@ let phTimeout;
 
 function typePlaceholder(text, i = 0) {
   if (i <= text.length) {
-    emailInput.placeholder = text.slice(0, i) + (i < text.length ? '|' : '');
+    emailInput.setAttribute('placeholder', text.slice(0, i) + (i < text.length ? '|' : ''));
+    emailInput.style.setProperty('--ph-color', 'rgba(0,0,0,0.5)');
     phTimeout = setTimeout(() => typePlaceholder(text, i + 1), 60);
   } else {
     setTimeout(() => erasePlaceholder(text, text.length), 1800);
