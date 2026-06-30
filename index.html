@@ -1104,14 +1104,48 @@ header{
   .s1-orb {top: 60px;width: 100%;}
   .slide-content{flex-direction:initial;padding:14px 16px;}
   .slide-right{width:100%;justify-content:flex-start;}
-  #slide-1 .slide-inner{flex-direction:column; width:100%; gap:20px}
+  #slide-1 .slide-inner{flex-direction:column; width:100%; gap:12px !important}
   #slide-1 .slide-inner .slide-left{ width:100% !important;}
   .shift-cards{height:200px;}
   .opp-cols{flex-direction:column;}
   .gap-cols{flex-direction:column;}
-  .vs-badge{display:none;}
+  .vs-badge, .shift-foot{display:none;}
   .nav-menu{display:none;}
+  .s1-figure{height: 85%;}
+  .btn-cta {padding: 8px 10px; font-size: 12px;}
   .hamburger{display:flex;}
+
+  /* ── SLIDE 1 (THE SHIFT) MOBILE ── */
+  #slide-1{align-items:flex-start;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+  #slide-1 .slide-content{height:auto;min-height:100%;padding-top:18px;padding-bottom:32px;}
+  #slide-1 .slide-inner{align-items:flex-start;}
+  .shift-cards{
+    flex-direction:column;
+    height:auto;max-height:none;
+    gap:10px;
+  }
+  .scard{
+    flex:none !important;
+    height:84px;
+    border-radius:12px;
+    transition:height .4s cubic-bezier(0.77,0,0.175,1);
+  }
+  .scard.scard-open{height:auto;min-height:300px;}
+  .scard:not(.scard-open) .scard-expand{display:none;}
+  .scard.scard-open .scard-body{display:none;}
+  .scard.scard-open .scard-expand{
+    position:static;opacity:1;transform:none;pointer-events:auto;
+    padding:18px 16px 20px;
+  }
+  .scard-title{white-space:normal;}
+  .scard-desc{max-width:none;}
+  .scard-arr{
+    transition:transform .35s ease;
+  }
+  .scard.scard-open .scard-arr{transform:translateY(-50%) rotate(90deg);}
+  .se-title{font-size:16px;}
+  .se-desc{font-size:12px;}
+}
 }
 </style>
 </head>
@@ -1220,7 +1254,7 @@ header{
         </div>
         <div class="slide-right" style="flex:1;min-width:0;align-items:stretch;">
           <div class="shift-cards">
-            <div class="scard">
+            <div class="scard scard-open" onclick="toggleScard(this)">
               <div class="scard-bg" style="background-image:url('img-bg01.png');"></div>
               <div class="scard-ov"></div>
               <div class="scard-body">
@@ -1246,7 +1280,7 @@ header{
               </div>
               <div class="scard-arr"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
             </div>
-            <div class="scard">
+            <div class="scard" onclick="toggleScard(this)">
               <div class="scard-bg" style="background-image:url('img-bg02.png');"></div>
               <div class="scard-ov"></div>
               <div class="scard-body">
@@ -1274,7 +1308,7 @@ They're essential.</div>
               </div>
               <div class="scard-arr"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
             </div>
-            <div class="scard">
+            <div class="scard" onclick="toggleScard(this)">
               <div class="scard-bg" style="background-image:url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=90');"></div>
               <div class="scard-ov"></div>
               <div class="scard-body">
@@ -1303,7 +1337,7 @@ The gap between the two is where value is won—or lost.</div>
               </div>
               <div class="scard-arr"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
             </div>
-            <div class="scard">
+            <div class="scard" onclick="toggleScard(this)">
               <div class="scard-bg" style="background-image:url('https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&q=90');"></div>
               <div class="scard-ov"></div>
               <div class="scard-body">
@@ -1536,6 +1570,21 @@ function initParticles(id){
 }
 for(let i=0;i<2;i++)initParticles('p'+i);
 
+function toggleScard(el){
+  if(window.innerWidth>680) return;
+  var wasOpen = el.classList.contains('scard-open');
+  el.parentElement.querySelectorAll('.scard').forEach(function(c){c.classList.remove('scard-open');});
+  if(!wasOpen) el.classList.add('scard-open');
+}
+function toggleMobileNav(){
+  document.getElementById('mobileNavMenu').classList.toggle('open');
+  document.getElementById('hamburgerBtn').classList.toggle('open');
+}
+function closeMobileNav(){
+  document.getElementById('mobileNavMenu').classList.remove('open');
+  document.getElementById('hamburgerBtn').classList.remove('open');
+}
+  
 // ── Re-trigger pipeline step animations on slide activate ──
 // already handled via CSS .active class
 </script>
