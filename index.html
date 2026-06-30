@@ -1116,11 +1116,14 @@ header{
   .hamburger{display:flex;}
   .scard:hover .scard-body{opacity: 1;}
   .scard-num {display: none;}
-  .scard-ico {width: 26px;height: 26px;}
+  .scard-ico {width: 25px;height: 25px; margin-bottom: 2px;}
   .scard-ico svg {width: 14px;height: 14px;}
-  .scard-arr{right: 10px;}
+  .scard-arr{right: 10px; background: #ffffff94;}
   .se-ico {width: 34px;height: 34px;border-radius: 8px;}
   .scard-expand {bottom: auto !important;}
+  .bnav-lbl{color:#dcdcdc;}.bnav-dot{background:#dcdcdc}
+  .bnav-item{background: #ffffff38;}
+  .bnav-item.active {background: #1e50ff3b;}
 
   /* ── SLIDE 1 (THE SHIFT) MOBILE ── */
   #slide-1{align-items:flex-start;overflow-y:auto;-webkit-overflow-scrolling:touch;}
@@ -1137,12 +1140,13 @@ header{
     border-radius:12px;
     transition:height .4s cubic-bezier(0.77,0,0.175,1);
   }
-  .scard.scard-open{height:auto;min-height:300px;}
+  .scard.scard-open{height:auto;min-height:260px;}
   .scard:not(.scard-open) .scard-expand{display:none;}
   .scard.scard-open .scard-body{display:none;}
   .scard.scard-open .scard-expand{
     opacity:1;pointer-events:auto;
     padding:18px 16px 20px;
+    transform: translateY(0px);
   }
   .scard-title{white-space:normal;}
   .scard-desc{max-width:none;}
