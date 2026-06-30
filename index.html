@@ -116,7 +116,33 @@ header{
   border-radius:6px;cursor:pointer;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
 }
-.hamburger span{display:block;width:14px;height:1.5px;background:var(--text);border-radius:2px;}
+.hamburger span{display:block;width:14px;height:1.5px;background:var(--text);border-radius:2px;transition:transform .25s,opacity .25s;}
+.hamburger{display:none;}
+.hamburger.open span:nth-child(1){transform:translateY(5.5px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-5.5px) rotate(-45deg);}
+
+/* ── MOBILE NAV DROPDOWN ── */
+.mobile-nav-menu{
+  position:fixed;
+  top:var(--hdr);left:0;right:0;
+  z-index:999;
+  background:rgba(242,244,248,0.98);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(0,0,0,0.07);
+  display:flex;flex-direction:column;
+  padding:8px 20px 14px;
+  gap:2px;
+  transform:translateY(-110%);
+  opacity:0;
+  transition:transform .3s cubic-bezier(0.77,0,0.175,1),opacity .25s;
+  pointer-events:none;
+}
+.mobile-nav-menu.open{transform:translateY(0);opacity:1;pointer-events:auto;}
+.mobile-nav-menu .nav-item{
+  text-align:left;width:100%;padding:12px 14px;border-radius:10px;font-size:14px;
+}
+.mobile-nav-menu .nav-item.nav-active{background:rgba(30,80,255,0.1);}
 
 /* ── SLIDES ── */
 .slides-wrapper{
@@ -1085,6 +1111,7 @@ header{
   .gap-cols{flex-direction:column;}
   .vs-badge{display:none;}
   .nav-menu{display:none;}
+  .hamburger{display:flex;}
 }
 </style>
 </head>
@@ -1101,9 +1128,18 @@ header{
       <button class="nav-item" onclick="openDetail('inspire-me')">Inspire Me</button>
     </nav>
     <button class="btn-cta" onclick="openDetail('earn-10')">Can We Earn 10 Minutes?</button>
-    <!-- <button class="hamburger"><span></span><span></span><span></span></button> -->
+    <button class="hamburger" id="hamburgerBtn" onclick="toggleMobileNav()"><span></span><span></span><span></span></button>
   </div>
 </header>
+
+<!-- MOBILE NAV DROPDOWN -->
+<nav class="mobile-nav-menu" id="mobileNavMenu">
+  <button class="nav-item nav-active" onclick="showSlides();closeMobileNav();">NovemIQ Exists</button>
+  <button class="nav-item" onclick="openDetail('show-me');closeMobileNav();">Show Me</button>
+  <button class="nav-item" onclick="openDetail('empower-me');closeMobileNav();">Empower Me</button>
+  <button class="nav-item" onclick="openDetail('inspire-me');closeMobileNav();">Inspire Me</button>
+</nav>
+
 
 <!-- DETAIL PAGE OVERLAY -->
 <div class="detail-overlay" id="detail-overlay">
@@ -1328,6 +1364,14 @@ const TOTAL=2;
 let cur=0, busy=false;
 const track=document.getElementById('track');
 
+function toggleMobileNav(){
+  document.getElementById('mobileNavMenu').classList.toggle('open');
+  document.getElementById('hamburgerBtn').classList.toggle('open');
+}
+function closeMobileNav(){
+  document.getElementById('mobileNavMenu').classList.remove('open');
+  document.getElementById('hamburgerBtn').classList.remove('open');
+}
 function showSlides(){
   closeDetail();
   document.querySelectorAll('.nav-item').forEach((el,i)=>el.classList.toggle('nav-active',i===0));
